@@ -8,10 +8,13 @@ import { redisConfig } from "../infrastructure/clients/redis/config";
 import { RedisConnection } from "../infrastructure/clients/redis/connection";
 import { ICacheRepository } from "../domain/interfaces/cache.repository.interface";
 import { CacheRepository } from "../infrastructure/database/repositories/cache.repository";
+import { ExpressClientAdapter } from "../infrastructure/clients/express/express.client";
+import { IHttpServer } from "../domain/interfaces/http.server.interface";
 
 const container = new Container()
 
 export async function initializeContainer() {
+    container.bind<IHttpServer>(TYPES.HttpServer).to(ExpressClientAdapter).inSingletonScope();
     const mainRedis = await RedisConnection.connect(redisConfig);
     const subscriberRedis = await RedisConnection.connectSubscriber(redisConfig);
 
@@ -25,3 +28,5 @@ export async function initializeContainer() {
     container.bind<ICacheRepository>(TYPES.CacheRepository).to(CacheRepository);
     return container;
 }
+
+export { container };
