@@ -1,6 +1,6 @@
 import { In, ObjectLiteral, Repository } from 'typeorm';
-import { IOrmRepository } from '../../../domain/interfaces/orm.client.interface';
 import { injectable } from 'inversify';
+import { IOrmRepository } from '../../../../domain/interfaces/orm.client.interface';
 
 @injectable()
 export class TypeOrmClientAdapter<T extends ObjectLiteral> implements IOrmRepository<T> {

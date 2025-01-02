@@ -7,6 +7,10 @@ const TYPES = {
     AccountRepository: Symbol.for("AccountRepository"),
     TransactionRepository: Symbol.for("TransactionRepository"),
     SqlClient: Symbol.for("SqlClient"),
+    OrmRepository: Symbol.for("OrmRepository"),
+    BaseMapper: Symbol.for("BaseMapper"),
+    AccountMapper: Symbol.for("AccountMapper"),
+    TransactionMapper: Symbol.for("TransactionMapper"),
 };
 
 export { TYPES };

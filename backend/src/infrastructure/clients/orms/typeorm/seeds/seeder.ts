@@ -3,8 +3,8 @@ import { TypeOrmConnection } from "../connection";
 import { AccountORM } from "../entities/account.orm.entity";
 import { TransactionORM } from "../entities/transaction.orm.entity";
 import { TransactionMapper } from "../../mappers/transaction.mapper";
-import { Account } from "../../../../domain/entities/account.entity";
-import { StatusTransaction, Transaction, TransactionType } from "../../../../domain/entities/transaction.entity";
+import { Account } from "../../../../../domain/entities/account.entity";
+import { StatusTransaction, Transaction, TransactionType } from "../../../../../domain/entities/transaction.entity";
 
 export class Seeder {
     private readonly dataSource: DataSource;
@@ -12,7 +12,6 @@ export class Seeder {
     constructor() {
         this.dataSource = TypeOrmConnection.getInstance();
     }
-
 
     private async seedAccounts() {
         const accountRepository = this.dataSource.getRepository(AccountORM);

@@ -1,4 +1,3 @@
-
 export enum StatusTransaction {
     PENDING = 'PENDING',
     COMPLETED = 'COMPLETED',

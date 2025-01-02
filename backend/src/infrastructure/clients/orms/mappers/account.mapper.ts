@@ -1,4 +1,4 @@
-import { Account } from "../../../domain/entities/account.entity";
+import { Account } from "../../../../domain/entities/account.entity";
 import { AccountORM } from "../typeorm/entities/account.orm.entity";
 import { BaseMapper } from "./base.mapper";
 import { TransactionMapper } from "./transaction.mapper";

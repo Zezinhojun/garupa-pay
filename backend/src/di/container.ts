@@ -6,26 +6,43 @@ import { RedisCacheClientAdapter } from "../infrastructure/clients/redis/redis.c
 import { ICacheClient } from "../domain/interfaces/cache.client.interface";
 import { redisConfig } from "../infrastructure/clients/redis/config";
 import { RedisConnection } from "../infrastructure/clients/redis/connection";
-import { ICacheRepository } from "../domain/interfaces/cache.repository.interface";
-import { CacheRepository } from "../infrastructure/database/repositories/cache.repository";
 import { ExpressClientAdapter } from "../infrastructure/clients/express/express.client";
 import { IHttpServer } from "../domain/interfaces/http.server.interface";
-import { TypeOrmConnection } from "../infrastructure/orms/typeorm/connection";
 import { IOrmRepository } from "../domain/interfaces/orm.client.interface";
-import { AccountORM } from "../infrastructure/orms/typeorm/entities/account.orm.entity";
-import { TransactionORM } from "../infrastructure/orms/typeorm/entities/transaction.orm.entity";
-import { TypeOrmClientAdapter } from "../infrastructure/orms/typeorm/typeorm.client";
 import { PostgresConnection } from "../infrastructure/clients/postgres/connection";
 import { postgresConfig } from "../infrastructure/clients/postgres/config";
+import { IMapper } from "../domain/interfaces/mapper.interface";
+import { Account } from "../domain/entities/account.entity";
+import { Transaction } from "../domain/entities/transaction.entity";
+import { ICacheRepository } from "../domain/interfaces/cache.repository.interface";
+import { CacheRepository } from "../infrastructure/database/repositories/cache.repository";
+import { AccountMapper } from "../infrastructure/clients/orms/mappers/account.mapper";
+import { TransactionMapper } from "../infrastructure/clients/orms/mappers/transaction.mapper";
+import { TypeOrmConnection } from "../infrastructure/clients/orms/typeorm/connection";
+import { AccountORM } from "../infrastructure/clients/orms/typeorm/entities/account.orm.entity";
+import { TransactionORM } from "../infrastructure/clients/orms/typeorm/entities/transaction.orm.entity";
+import { TypeOrmClientAdapter } from "../infrastructure/clients/orms/typeorm/typeorm.client";
 
 const container = new Container()
 
 export async function initializeContainer() {
+    initializePostgres()
+    await initializeTypeOrm();
+    await initializeRedis();
+
+    initializeHttpServer();
+    initializeCache();
+    initializeMappers()
+
+    return container;
+}
+
+function initializePostgres() {
     PostgresConnection.connect(postgresConfig);
-    container.bind<IHttpServer>(TYPES.HttpServer).to(ExpressClientAdapter).inSingletonScope();
+}
 
+async function initializeTypeOrm() {
     const dataSource = await TypeOrmConnection.connect();
-
     container.bind<IOrmRepository<TransactionORM>>(TYPES.TransactionRepository)
         .toDynamicValue(() => new TypeOrmClientAdapter<TransactionORM>(dataSource.getRepository(TransactionORM)))
         .inSingletonScope();
@@ -33,7 +50,9 @@ export async function initializeContainer() {
     container.bind<IOrmRepository<AccountORM>>(TYPES.AccountRepository)
         .toDynamicValue(() => new TypeOrmClientAdapter<AccountORM>(dataSource.getRepository(AccountORM)))
         .inSingletonScope();
+}
 
+async function initializeRedis() {
     const mainRedis = await RedisConnection.connect(redisConfig);
     const subscriberRedis = await RedisConnection.connectSubscriber(redisConfig);
 
@@ -44,8 +63,19 @@ export async function initializeContainer() {
     container.bind<ICacheClient>(TYPES.CacheClient)
         .toDynamicValue(() => new RedisCacheClientAdapter(mainRedis))
         .inSingletonScope();
+}
+
+function initializeHttpServer() {
+    container.bind<IHttpServer>(TYPES.HttpServer).to(ExpressClientAdapter).inSingletonScope();
+}
+
+function initializeCache() {
     container.bind<ICacheRepository>(TYPES.CacheRepository).to(CacheRepository);
-    return container;
+}
+
+function initializeMappers() {
+    container.bind<IMapper<Account, AccountORM>>(TYPES.AccountMapper).to(AccountMapper);
+    container.bind<IMapper<Transaction, TransactionORM>>(TYPES.TransactionMapper).to(TransactionMapper);
 }
 
 export { container };

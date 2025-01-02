@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { AccountORM } from "./account.orm.entity";
-import { StatusTransaction, TransactionType } from "../../../../domain/entities/transaction.entity";
+import { StatusTransaction, TransactionType } from "../../../../../domain/entities/transaction.entity";
 
 @Entity('transactions')
 export class TransactionORM {
