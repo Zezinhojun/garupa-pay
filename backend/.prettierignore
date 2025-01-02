@@ -1,0 +1,13 @@
+dist/
+build/
+coverage/
+node_modules/
+jest.config.js
+config/
+*.d.ts
+*.js.map
+.env
+.env.*
+*.bak
+*.tmp
+*.log
