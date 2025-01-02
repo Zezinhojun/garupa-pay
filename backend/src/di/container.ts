@@ -26,6 +26,7 @@ import { IBaseRepository } from "../domain/interfaces/base.repository";
 import { IAccountRepository } from "../domain/interfaces/account.repository.interface";
 import { TransactionRepository } from "../infrastructure/database/repositories/transaction.repository";
 import { AccountRepository } from "../infrastructure/database/repositories/account.repository";
+import { UpdateAccountStatusUseCase } from "../applications/usecases/updateAccountStatus.usecase";
 
 const container = new Container()
 
@@ -38,6 +39,7 @@ export async function initializeContainer() {
     initializeCache();
     initializeMappers()
     initializeRepositories();
+    initializeUseCases();
 
     return container;
 }
@@ -86,6 +88,12 @@ function initializeMappers() {
 function initializeRepositories() {
     container.bind<IBaseRepository<Transaction>>(TYPES.TransactionRepository).to(TransactionRepository).inSingletonScope();
     container.bind<IAccountRepository>(TYPES.AccountRepository).to(AccountRepository).inSingletonScope();
+}
+
+function initializeUseCases() {
+    container.bind<UpdateAccountStatusUseCase>(TYPES.UpdateAccountStatusUseCase)
+        .to(UpdateAccountStatusUseCase)
+        .inSingletonScope();
 }
 
 export { container };

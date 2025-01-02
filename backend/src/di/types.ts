@@ -11,6 +11,7 @@ const TYPES = {
     BaseMapper: Symbol.for("BaseMapper"),
     AccountMapper: Symbol.for("AccountMapper"),
     TransactionMapper: Symbol.for("TransactionMapper"),
+    UpdateAccountStatusUseCase: Symbol.for("UpdateAccountStatusUseCase"),
 };
 
 export { TYPES };
