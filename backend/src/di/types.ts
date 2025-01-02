@@ -13,6 +13,7 @@ const TYPES = {
     TransactionMapper: Symbol.for("TransactionMapper"),
     UpdateAccountStatusUseCase: Symbol.for("UpdateAccountStatusUseCase"),
     CreateTransactionUseCase: Symbol.for("CreateTransactionUseCase"),
+    ProcessTransactionUseCase: Symbol.for("ProcessTransactionUseCase"),
 };
 
 export { TYPES };

@@ -1,3 +1,4 @@
+import { ProcessTransactionUseCase } from './../applications/usecases/processTransaction.usecase';
 import { Container } from "inversify";
 import { IEventBus } from "../domain/interfaces/eventbus.interface";
 import { TYPES } from "./types";
@@ -98,6 +99,10 @@ function initializeUseCases() {
 
     container.bind<CreateTransactionUseCase>(TYPES.CreateTransactionUseCase)
         .to(CreateTransactionUseCase)
+        .inSingletonScope();
+
+    container.bind<ProcessTransactionUseCase>(TYPES.ProcessTransactionUseCase)
+        .to(ProcessTransactionUseCase)
         .inSingletonScope();
 }
 
