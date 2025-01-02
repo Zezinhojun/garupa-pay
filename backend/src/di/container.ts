@@ -15,13 +15,16 @@ import { IOrmRepository } from "../domain/interfaces/orm.client.interface";
 import { AccountORM } from "../infrastructure/orms/typeorm/entities/account.orm.entity";
 import { TransactionORM } from "../infrastructure/orms/typeorm/entities/transaction.orm.entity";
 import { TypeOrmClientAdapter } from "../infrastructure/orms/typeorm/typeorm.client";
+import { PostgresConnection } from "../infrastructure/clients/postgres/connection";
+import { postgresConfig } from "../infrastructure/clients/postgres/config";
 
 const container = new Container()
 
 export async function initializeContainer() {
+    PostgresConnection.connect(postgresConfig);
     container.bind<IHttpServer>(TYPES.HttpServer).to(ExpressClientAdapter).inSingletonScope();
+
     const dataSource = await TypeOrmConnection.connect();
-    console.log("TypeORM connected successfully");
 
     container.bind<IOrmRepository<TransactionORM>>(TYPES.TransactionRepository)
         .toDynamicValue(() => new TypeOrmClientAdapter<TransactionORM>(dataSource.getRepository(TransactionORM)))

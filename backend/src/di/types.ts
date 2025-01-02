@@ -6,6 +6,7 @@ const TYPES = {
     HttpServer: Symbol.for("HttpServer"),
     AccountRepository: Symbol.for("AccountRepository"),
     TransactionRepository: Symbol.for("TransactionRepository"),
+    SqlClient: Symbol.for("SqlClient"),
 };
 
 export { TYPES };

@@ -8,7 +8,6 @@ export class TypeOrmConnection {
         if (!this.instance) {
             this.instance = new DataSource(typeOrmConfig)
             await this.instance.initialize()
-            console.log('TypeORM connected successfully');
         }
 
         return this.instance
