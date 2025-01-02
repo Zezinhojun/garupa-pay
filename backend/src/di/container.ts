@@ -10,11 +10,27 @@ import { ICacheRepository } from "../domain/interfaces/cache.repository.interfac
 import { CacheRepository } from "../infrastructure/database/repositories/cache.repository";
 import { ExpressClientAdapter } from "../infrastructure/clients/express/express.client";
 import { IHttpServer } from "../domain/interfaces/http.server.interface";
+import { TypeOrmConnection } from "../infrastructure/orms/typeorm/connection";
+import { IOrmRepository } from "../domain/interfaces/orm.client.interface";
+import { AccountORM } from "../infrastructure/orms/typeorm/entities/account.orm.entity";
+import { TransactionORM } from "../infrastructure/orms/typeorm/entities/transaction.orm.entity";
+import { TypeOrmClientAdapter } from "../infrastructure/orms/typeorm/typeorm.client";
 
 const container = new Container()
 
 export async function initializeContainer() {
     container.bind<IHttpServer>(TYPES.HttpServer).to(ExpressClientAdapter).inSingletonScope();
+    const dataSource = await TypeOrmConnection.connect();
+    console.log("TypeORM connected successfully");
+
+    container.bind<IOrmRepository<TransactionORM>>(TYPES.TransactionRepository)
+        .toDynamicValue(() => new TypeOrmClientAdapter<TransactionORM>(dataSource.getRepository(TransactionORM)))
+        .inSingletonScope();
+
+    container.bind<IOrmRepository<AccountORM>>(TYPES.AccountRepository)
+        .toDynamicValue(() => new TypeOrmClientAdapter<AccountORM>(dataSource.getRepository(AccountORM)))
+        .inSingletonScope();
+
     const mainRedis = await RedisConnection.connect(redisConfig);
     const subscriberRedis = await RedisConnection.connectSubscriber(redisConfig);
 

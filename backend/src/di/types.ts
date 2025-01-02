@@ -4,6 +4,8 @@ const TYPES = {
     CacheClient: Symbol.for("CacheClient"),
     CacheRepository: Symbol.for("CacheRepository"),
     HttpServer: Symbol.for("HttpServer"),
+    AccountRepository: Symbol.for("AccountRepository"),
+    TransactionRepository: Symbol.for("TransactionRepository"),
 };
 
 export { TYPES };
