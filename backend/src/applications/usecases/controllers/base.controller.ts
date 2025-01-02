@@ -1,7 +1,7 @@
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import { IBaseController, IRequest } from "../../../domain/interfaces/base.controller.interface";
 import { IBaseRepository } from "../../../domain/interfaces/base.repository";
-import { TYPES } from "../../../di/types";
+
 
 interface IPlainConvertible {
     toPlain(): object;
@@ -10,7 +10,6 @@ interface IPlainConvertible {
 @injectable()
 export class BaseController<T extends IPlainConvertible> implements IBaseController<T> {
     constructor(
-        @inject(TYPES.BaseRepository)
         protected readonly repository: IBaseRepository<T>
     ) { }
 

@@ -11,7 +11,7 @@ import { BaseRepository } from "./base.repository";
 @injectable()
 export class AccountRepository extends BaseRepository<Account, AccountORM> implements IAccountRepository {
     constructor(
-        @inject(TYPES.AccountRepository)
+        @inject(TYPES.AccountOrmRepository)
         client: IOrmRepository<AccountORM>,
         @inject(TYPES.AccountMapper)
         mapper: AccountMapper,

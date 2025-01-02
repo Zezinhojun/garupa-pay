@@ -55,11 +55,11 @@ function initializePostgres() {
 
 async function initializeTypeOrm() {
     const dataSource = await TypeOrmConnection.connect();
-    container.bind<IOrmRepository<TransactionORM>>(TYPES.TransactionRepository)
+    container.bind<IOrmRepository<TransactionORM>>(TYPES.TransactionOrmRepository)
         .toDynamicValue(() => new TypeOrmClientAdapter<TransactionORM>(dataSource.getRepository(TransactionORM)))
         .inSingletonScope();
 
-    container.bind<IOrmRepository<AccountORM>>(TYPES.AccountRepository)
+    container.bind<IOrmRepository<AccountORM>>(TYPES.AccountOrmRepository)
         .toDynamicValue(() => new TypeOrmClientAdapter<AccountORM>(dataSource.getRepository(AccountORM)))
         .inSingletonScope();
 }
@@ -114,9 +114,7 @@ function initializeUseCases() {
 }
 
 function initializeControllers() {
-    container.bind<AccountController>(TYPES.AccountController)
-        .to(AccountController)
-        .inSingletonScope();
+    container.bind<AccountController>(TYPES.AccountController).to(AccountController).inSingletonScope();
 }
 
 export { container };

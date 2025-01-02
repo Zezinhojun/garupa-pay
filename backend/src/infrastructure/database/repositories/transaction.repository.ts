@@ -10,7 +10,7 @@ import { TYPES } from "../../../di/types";
 @injectable()
 export class TransactionRepository extends BaseRepository<Transaction, TransactionORM> {
     constructor(
-        @inject(TYPES.TransactionRepository)
+        @inject(TYPES.TransactionOrmRepository)
         client: IOrmRepository<TransactionORM>,
         @inject(TYPES.TransactionMapper)
         mapper: TransactionMapper,
