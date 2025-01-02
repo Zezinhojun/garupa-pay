@@ -1,6 +1,8 @@
 import express, { Application, json, Request, RequestHandler, Response } from "express";
 import { IHttpServer } from "../../../domain/interfaces/http.server.interface";
+import { injectable } from "inversify";
 
+@injectable()
 export class ExpressClientAdapter implements IHttpServer<Request, Response> {
     private readonly app: Application
 

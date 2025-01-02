@@ -22,6 +22,10 @@ import { TypeOrmConnection } from "../infrastructure/clients/orms/typeorm/connec
 import { AccountORM } from "../infrastructure/clients/orms/typeorm/entities/account.orm.entity";
 import { TransactionORM } from "../infrastructure/clients/orms/typeorm/entities/transaction.orm.entity";
 import { TypeOrmClientAdapter } from "../infrastructure/clients/orms/typeorm/typeorm.client";
+import { IBaseRepository } from "../domain/interfaces/base.repository";
+import { IAccountRepository } from "../domain/interfaces/account.repository.interface";
+import { TransactionRepository } from "../infrastructure/database/repositories/transaction.repository";
+import { AccountRepository } from "../infrastructure/database/repositories/account.repository";
 
 const container = new Container()
 
@@ -33,6 +37,7 @@ export async function initializeContainer() {
     initializeHttpServer();
     initializeCache();
     initializeMappers()
+    initializeRepositories();
 
     return container;
 }
@@ -76,6 +81,11 @@ function initializeCache() {
 function initializeMappers() {
     container.bind<IMapper<Account, AccountORM>>(TYPES.AccountMapper).to(AccountMapper);
     container.bind<IMapper<Transaction, TransactionORM>>(TYPES.TransactionMapper).to(TransactionMapper);
+}
+
+function initializeRepositories() {
+    container.bind<IBaseRepository<Transaction>>(TYPES.TransactionRepository).to(TransactionRepository).inSingletonScope();
+    container.bind<IAccountRepository>(TYPES.AccountRepository).to(AccountRepository).inSingletonScope();
 }
 
 export { container };
