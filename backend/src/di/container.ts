@@ -6,6 +6,8 @@ import { RedisCacheClientAdapter } from "../infrastructure/clients/redis/redis.c
 import { ICacheClient } from "../domain/interfaces/cache.client.interface";
 import { redisConfig } from "../infrastructure/clients/redis/config";
 import { RedisConnection } from "../infrastructure/clients/redis/connection";
+import { ICacheRepository } from "../domain/interfaces/cache.repository.interface";
+import { CacheRepository } from "../infrastructure/database/repositories/cache.repository";
 
 const container = new Container()
 
@@ -20,6 +22,6 @@ export async function initializeContainer() {
     container.bind<ICacheClient>(TYPES.CacheClient)
         .toDynamicValue(() => new RedisCacheClientAdapter(mainRedis))
         .inSingletonScope();
-
+    container.bind<ICacheRepository>(TYPES.CacheRepository).to(CacheRepository);
     return container;
 }
