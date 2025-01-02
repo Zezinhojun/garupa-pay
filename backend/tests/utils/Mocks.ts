@@ -1,6 +1,6 @@
 import { Account, IAccount } from "../../src/domain/entities/account.entity";
 import { Transaction } from "../../src/domain/entities/transaction.entity";
-import { ICacheClient } from "../../src/domain/interfaces/cache.client.interface";
+import { ICacheClient } from "../../src/domain/interfaces/cache.client.interface copy";
 import { IOrmRepository } from "../../src/domain/interfaces/orm.client.interface";
 import { AccountORM } from "../../src/infrastructure/clients/orms/typeorm/entities/account.orm.entity";
 import { TransactionORM } from "../../src/infrastructure/clients/orms/typeorm/entities/transaction.orm.entity";

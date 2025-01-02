@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { IBaseRepository } from "../../../domain/interfaces/base.repository";
-import { ICacheClient } from "../../../domain/interfaces/cache.client.interface";
 import { IOrmRepository } from "../../../domain/interfaces/orm.client.interface";
 import { TYPES } from "../../../di/types";
 import { BaseMapper } from "../../clients/orms/mappers/base.mapper";
+import { ICacheClient } from "../../../domain/interfaces/cache.client.interface copy";
 
 @injectable()
 export abstract class BaseRepository<TDomain, TORM> implements IBaseRepository<TDomain> {

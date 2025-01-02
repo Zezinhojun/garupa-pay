@@ -8,6 +8,7 @@ const TYPES = {
     TransactionRepository: Symbol.for("TransactionRepository"),
     SqlClient: Symbol.for("SqlClient"),
     OrmRepository: Symbol.for("OrmRepository"),
+    BaseRepository: Symbol.for("BaseRepository"),
     BaseMapper: Symbol.for("BaseMapper"),
     AccountMapper: Symbol.for("AccountMapper"),
     TransactionMapper: Symbol.for("TransactionMapper"),
@@ -15,6 +16,8 @@ const TYPES = {
     CreateTransactionUseCase: Symbol.for("CreateTransactionUseCase"),
     ProcessTransactionUseCase: Symbol.for("ProcessTransactionUseCase"),
     TransactionEventHandler: Symbol.for("TransactionEventHandler"),
+    BaseController: Symbol.for("BaseController"),
+    AccountController: Symbol.for("AccountController"),
 };
 
 export { TYPES };

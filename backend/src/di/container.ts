@@ -4,7 +4,6 @@ import { IEventBus } from "../domain/interfaces/eventbus.interface";
 import { TYPES } from "./types";
 import { RedisClientAdapter } from "../infrastructure/clients/redis/redis.event.client";
 import { RedisCacheClientAdapter } from "../infrastructure/clients/redis/redis.cache.client";
-import { ICacheClient } from "../domain/interfaces/cache.client.interface";
 import { redisConfig } from "../infrastructure/clients/redis/config";
 import { RedisConnection } from "../infrastructure/clients/redis/connection";
 import { ExpressClientAdapter } from "../infrastructure/clients/express/express.client";
@@ -30,6 +29,8 @@ import { AccountRepository } from "../infrastructure/database/repositories/accou
 import { UpdateAccountStatusUseCase } from "../applications/usecases/updateAccountStatus.usecase";
 import { CreateTransactionUseCase } from "../applications/usecases/createTransaction.usecase";
 import { TransactionEventHandler } from '../infrastructure/events/transaction.handler';
+import { ICacheClient } from '../domain/interfaces/cache.client.interface copy';
+import { AccountController } from '../applications/usecases/controllers/account.controller';
 
 const container = new Container()
 
@@ -43,6 +44,7 @@ export async function initializeContainer() {
     initializeMappers()
     initializeRepositories();
     initializeUseCases();
+    initializeControllers()
 
     return container;
 }
@@ -108,6 +110,12 @@ function initializeUseCases() {
 
     container.bind<TransactionEventHandler>(TYPES.TransactionEventHandler)
         .to(TransactionEventHandler)
+        .inSingletonScope();
+}
+
+function initializeControllers() {
+    container.bind<AccountController>(TYPES.AccountController)
+        .to(AccountController)
         .inSingletonScope();
 }
 
