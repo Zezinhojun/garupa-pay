@@ -6,10 +6,12 @@ import { AccountController } from "./applications/usecases/controllers/account.c
 import { TransactionController } from "./applications/usecases/controllers/transaction.controller";
 
 class App {
+    private readonly port: number
     private container: Container;
 
     constructor() {
         this.container = container;
+        this.port = parseInt(process.env.BACKEND_SERVICE_PORT ?? '8080')
     }
 
     async initialize() {
@@ -31,7 +33,7 @@ class App {
                 server.addRoute('GET', '/transactions', (req, res) => transactionController.findAll(req, res));
                 server.addRoute('PUT', '/transactions/:id', (req, res) => transactionController.update(req, res));
                 server.addRoute('DELETE', '/transactions/:id', (req, res) => transactionController.delete(req, res));
-                server.start(3000);
+                server.start(this.port);
             }
         } catch (error) {
             console.error("Error during initialization:", error);

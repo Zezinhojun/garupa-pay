@@ -6,9 +6,11 @@ export interface RedisConfig {
 }
 
 export const redisConfig: RedisConfig = {
-    host: process.env.REDIS_GARUPA_SERVICE_HOST ?? 'localhost',
-    port: parseInt(process.env.REDIS_GARUPA_SERVICE_PORT ?? '6379'),
+    host: process.env.REDIS_HOST ?? 'localhost',
+    port: parseInt(process.env.REDIS_PORT ?? '6379'),
 }
+
+console.log('Redis Config:', redisConfig);
 
 export const redisOptions: RedisOptions = {
     host: redisConfig.host,

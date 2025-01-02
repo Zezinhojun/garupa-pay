@@ -5,7 +5,7 @@ services:
     build: 
       context: ./backend
     ports:
-      - "8081:8081"
+      - "8080:8080"
     environment:
       - PORT=${BACKEND_SERVICE_PORT:-8080}
       - POSTGRES_HOST=${POSTGRES_HOST:-garupa-db}
@@ -13,10 +13,11 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       - POSTGRES_DB=${POSTGRES_DB:-garupa-db}
-      - REDIS_HOST=${REDIS_GARUPA_SERVICE_HOST:-garupa-redis}
-      - REDIS_PORT=${REDIS_GARUPA_SERVICE_PORT:-6379}
+      - REDIS_HOST=${REDIS_HOST:-garupa-redis} 
+      - REDIS_PORT=${REDIS_PORT:-6379}  
     depends_on:
       - garupa-db
+      - garupa-redis 
     networks:
       - garupa-network
 
@@ -38,7 +39,7 @@ services:
     image: redis:latest
     container_name: garupa-redis
     ports:
-      - "${REDIS_GARUPA_SERVICE_PORT-:6379}:6379"
+      - "${REDIS_GARUPA_SERVICE_PORT:-6379}:6379"
     networks:
       - garupa-network
     logging:
@@ -46,6 +47,7 @@ services:
 
 networks:
   garupa-network:
+    driver: bridge
 
 volumes:
   garupa-data:

@@ -5,10 +5,10 @@ import { InitialMigration1735584303465 } from './migrations/1735584303465-Initia
 
 const typeOrmConfig: DataSourceOptions = {
     type: 'postgres',
-    host: process.env.DB_HOST ?? 'localhost',
-    port: parseInt(process.env.GARUPA_DB_PORT ?? '5432', 10),
+    host: process.env.POSTGRES_HOST ?? 'localhost',
+    port: parseInt(process.env.POSTGRES_PORT ?? '5432', 10),
     username: process.env.POSTGRES_USER ?? 'postgres',
-    password: process.env.POSTGRES_PASSWORD ?? 'postgres',
+    password: process.env.POSTGRES_PASSWORD ?? 'password',
     database: process.env.POSTGRES_DB ?? 'garupa-db',
     synchronize: false,
     logging: false,
