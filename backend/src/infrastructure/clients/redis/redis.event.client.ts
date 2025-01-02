@@ -8,9 +8,9 @@ export class RedisClientAdapter implements IEventBus {
     private readonly publishClient: Redis;
     private readonly subscribeClient: Redis;
 
-    constructor() {
-        this.publishClient = RedisConnection.getInstance();
-        this.subscribeClient = RedisConnection.getSubscriberInstance();
+    constructor(publishClient: Redis, subscribeClient: Redis) {
+        this.publishClient = publishClient;
+        this.subscribeClient = subscribeClient;
     }
     async emit(event: string, data: any): Promise<void> {
         await this.publishClient.publish(event, JSON.stringify(data));
