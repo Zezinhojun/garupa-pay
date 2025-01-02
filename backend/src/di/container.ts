@@ -27,6 +27,7 @@ import { IAccountRepository } from "../domain/interfaces/account.repository.inte
 import { TransactionRepository } from "../infrastructure/database/repositories/transaction.repository";
 import { AccountRepository } from "../infrastructure/database/repositories/account.repository";
 import { UpdateAccountStatusUseCase } from "../applications/usecases/updateAccountStatus.usecase";
+import { CreateTransactionUseCase } from "../applications/usecases/createTransaction.usecase";
 
 const container = new Container()
 
@@ -93,6 +94,10 @@ function initializeRepositories() {
 function initializeUseCases() {
     container.bind<UpdateAccountStatusUseCase>(TYPES.UpdateAccountStatusUseCase)
         .to(UpdateAccountStatusUseCase)
+        .inSingletonScope();
+
+    container.bind<CreateTransactionUseCase>(TYPES.CreateTransactionUseCase)
+        .to(CreateTransactionUseCase)
         .inSingletonScope();
 }
 
