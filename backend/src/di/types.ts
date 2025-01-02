@@ -20,6 +20,7 @@ const TYPES = {
     TransactionEventHandler: Symbol.for("TransactionEventHandler"),
     BaseController: Symbol.for("BaseController"),
     AccountController: Symbol.for("AccountController"),
+    TransactionController: Symbol.for("TransactionController"),
 };
 
 export { TYPES };

@@ -22,9 +22,6 @@ export class TransactionMapper extends BaseMapper<Transaction, TransactionORM> {
     }
 
     toPersistence(domain: Transaction): TransactionORM {
-        if (!domain.fromAccountId || !domain.toAccountId || !domain.amount || !domain.status || !domain.type) {
-            throw new Error("Missing required fields in domain entity.");
-        }
         const transactioOrm = new TransactionORM();
         if (domain.id) {
             transactioOrm.id = domain.id;

@@ -11,7 +11,7 @@ const typeOrmConfig: DataSourceOptions = {
     password: process.env.POSTGRES_PASSWORD ?? 'postgres',
     database: process.env.POSTGRES_DB ?? 'garupa-db',
     synchronize: false,
-    logging: true,
+    logging: false,
     entities: [AccountORM, TransactionORM],
     migrations: [InitialMigration1735584303465],
 };

@@ -31,6 +31,7 @@ import { CreateTransactionUseCase } from "../applications/usecases/createTransac
 import { TransactionEventHandler } from '../infrastructure/events/transaction.handler';
 import { ICacheClient } from '../domain/interfaces/cache.client.interface copy';
 import { AccountController } from '../applications/usecases/controllers/account.controller';
+import { TransactionController } from '../applications/usecases/controllers/transaction.controller';
 
 const container = new Container()
 
@@ -68,7 +69,7 @@ async function initializeRedis() {
     const mainRedis = await RedisConnection.connect(redisConfig);
     const subscriberRedis = await RedisConnection.connectSubscriber(redisConfig);
 
-    container.bind<IEventBus>(TYPES.EventBusClient)
+    container.bind<IEventBus>(TYPES.EventBus)
         .toDynamicValue(() => new RedisClientAdapter(mainRedis, subscriberRedis))
         .inSingletonScope();
 
@@ -115,6 +116,9 @@ function initializeUseCases() {
 
 function initializeControllers() {
     container.bind<AccountController>(TYPES.AccountController).to(AccountController).inSingletonScope();
+    container.bind<TransactionController>(TYPES.TransactionController)
+        .to(TransactionController)
+        .inSingletonScope();
 }
 
 export { container };
