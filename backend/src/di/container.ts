@@ -29,6 +29,7 @@ import { TransactionRepository } from "../infrastructure/database/repositories/t
 import { AccountRepository } from "../infrastructure/database/repositories/account.repository";
 import { UpdateAccountStatusUseCase } from "../applications/usecases/updateAccountStatus.usecase";
 import { CreateTransactionUseCase } from "../applications/usecases/createTransaction.usecase";
+import { TransactionEventHandler } from '../infrastructure/events/transaction.handler';
 
 const container = new Container()
 
@@ -103,6 +104,10 @@ function initializeUseCases() {
 
     container.bind<ProcessTransactionUseCase>(TYPES.ProcessTransactionUseCase)
         .to(ProcessTransactionUseCase)
+        .inSingletonScope();
+
+    container.bind<TransactionEventHandler>(TYPES.TransactionEventHandler)
+        .to(TransactionEventHandler)
         .inSingletonScope();
 }
 

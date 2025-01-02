@@ -14,6 +14,7 @@ const TYPES = {
     UpdateAccountStatusUseCase: Symbol.for("UpdateAccountStatusUseCase"),
     CreateTransactionUseCase: Symbol.for("CreateTransactionUseCase"),
     ProcessTransactionUseCase: Symbol.for("ProcessTransactionUseCase"),
+    TransactionEventHandler: Symbol.for("TransactionEventHandler"),
 };
 
 export { TYPES };
