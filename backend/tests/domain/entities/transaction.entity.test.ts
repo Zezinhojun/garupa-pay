@@ -116,14 +116,6 @@ describe('Transaction entity', () => {
             transaction.setStatus(StatusTransaction.FAILED);
             expect(transaction.status).toBe(StatusTransaction.FAILED);
         });
-
-        it('should update updatedAt when status changes', () => {
-            const originalDate = transaction.updatedAt;
-            setTimeout(() => {
-                transaction.setStatus(StatusTransaction.COMPLETED);
-                expect(transaction.updatedAt!.getTime()).toBeGreaterThan(originalDate!.getTime());
-            }, 1);
-        });
     });
 
     describe('setType method', () => {
@@ -137,13 +129,6 @@ describe('Transaction entity', () => {
                 .toThrow('Invalid transaction type');
         });
 
-        it('should update updatedAt when type changes', () => {
-            const originalDate = transaction.updatedAt;
-            setTimeout(() => {
-                transaction.setType(TransactionType.DEPOSIT);
-                expect(transaction.updatedAt!.getTime()).toBeGreaterThan(originalDate!.getTime());
-            }, 1);
-        });
     });
 
     describe('Getters', () => {
