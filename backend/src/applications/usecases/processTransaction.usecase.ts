@@ -47,9 +47,8 @@ export class ProcessTransactionUseCase {
         const transaction = new Transaction({ ...formattedTransaction });
 
         if (!fromAccount || !toAccount) {
-            if (!fromAccount) {
-                throw AppError.notFound(`fromAccount not found`);
-            }
+            if (!fromAccount) throw AppError.notFound(`fromAccount not found`);
+
             transaction.setStatus(StatusTransaction.FAILED);
             fromAccount.addTransaction(transaction);
             await this.accountRepository.update(fromAccount.id, fromAccount);

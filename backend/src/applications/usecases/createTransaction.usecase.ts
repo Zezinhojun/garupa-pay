@@ -41,10 +41,7 @@ export class CreateTransactionUseCase {
     ) { }
 
     async execute(input: CreateTransactionDTO): Promise<CreateTransactionResponseDTO> {
-
-        if (!this.isValidTransactionData(input)) {
-            throw AppError.badRequest(`Invalid data`);
-        }
+        if (!this.isValidTransactionData(input)) throw AppError.badRequest(`Invalid data`);
 
         this.validateUUIDs(input);
 
@@ -56,9 +53,7 @@ export class CreateTransactionUseCase {
             input.dueDate
         );
 
-        if (!this.transactionRepository) {
-            throw AppError.internalServerError('Transaction repository not available');
-        }
+        if (!this.transactionRepository) throw AppError.internalServerError('Transaction repository not available');
 
         const savedTransaction = await this.transactionRepository.create(transaction);
         const formattedTransaction = await this.formatTrasanction(savedTransaction)
@@ -68,7 +63,6 @@ export class CreateTransactionUseCase {
         });
 
         return { success: true, data: formattedTransaction };
-
     }
 
     private async formatTrasanction(transaction: Transaction) {
@@ -93,12 +87,7 @@ export class CreateTransactionUseCase {
     }
 
     private validateUUIDs(input: CreateTransactionDTO): void {
-        if (!isUUID(input.fromAccountId)) {
-            throw AppError.badRequest("fromAccountId must be a valid UUID");
-        }
-
-        if (!isUUID(input.toAccountId)) {
-            throw AppError.badRequest("toAccountId must be a valid UUID");
-        }
+        if (!isUUID(input.fromAccountId)) throw AppError.badRequest("fromAccountId must be a valid UUID");
+        if (!isUUID(input.toAccountId)) throw AppError.badRequest("toAccountId must be a valid UUID");
     }
 }

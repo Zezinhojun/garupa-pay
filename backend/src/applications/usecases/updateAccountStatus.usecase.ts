@@ -12,7 +12,6 @@ export interface UpdateAccountStatusDTO {
 export class UpdateAccountStatusUseCase {
     private readonly accountRepository: AccountRepository;
 
-
     constructor(
         @inject(TYPES.AccountRepository)
         accountRepository: AccountRepository) {
@@ -23,10 +22,7 @@ export class UpdateAccountStatusUseCase {
         const { accountId } = input;
         const account = await this.accountRepository.findById(accountId)
 
-        if (!account) {
-            throw AppError.notFound("Account not found")
-
-        }
+        if (!account) throw AppError.notFound("Account not found")
 
         if (account.isActive) {
             account.deactivateAccount();
