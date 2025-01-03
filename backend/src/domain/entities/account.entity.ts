@@ -1,3 +1,4 @@
+import { AppError } from "../../applications/error/appError";
 import { Transaction } from "./transaction.entity";
 
 export interface IAccount {
@@ -63,7 +64,7 @@ export class Account implements IAccount {
 
     deposit(amount: number): void {
         if (amount <= 0) {
-            throw new Error('Deposit amount must be greater than zero')
+            throw AppError.badRequest('Deposit amount must be greater than zero');
         }
 
         this._balance += this.formatAmount(amount);
@@ -71,13 +72,13 @@ export class Account implements IAccount {
 
     withdraw(amount: number): void {
         if (amount <= 0) {
-            throw new Error('Withdraw amount must be greater than zero');
+            throw AppError.badRequest('Withdraw amount must be greater than zero');
         }
 
         const formatedAmount = this.formatAmount(amount)
 
         if (this._balance < formatedAmount) {
-            throw new Error('Insufficient balance');
+            throw AppError.badRequest('Insufficient balance');
         }
 
         this._balance -= formatedAmount;
@@ -85,7 +86,7 @@ export class Account implements IAccount {
 
     validateAccountStatus(): void {
         if (!this._isActive) {
-            throw new Error('Account is inactive');
+            throw AppError.badRequest('Account is inactive');
         }
     }
 
@@ -99,30 +100,36 @@ export class Account implements IAccount {
 
     static create(userCpf: string, name: string, initialBalance: number): Account {
         if (initialBalance < 0) {
-            throw new Error('Initial balance cannot be negative');
+            throw AppError.badRequest('Initial balance cannot be negative');
         }
         return new Account({ userCpf, name, balance: initialBalance });
     }
 
     private isValidCpf(cpf: string): boolean {
         const regex = /^\d{11}$/;
-        return regex.test(cpf);
+        if (!regex.test(cpf)) {
+            throw AppError.badRequest('Invalid CPF format');
+        }
+        return true;
     }
 
     private formatAmount(amount: number): number {
+        if (amount < 0) {
+            throw AppError.badRequest('Amount cannot be negative');
+        }
         return Math.floor(amount * 100) / 100;
     }
 
     canWithDraw(amount: number): boolean {
         if (amount <= 0) {
-            throw new Error('Amount must be greater than zero');
+            throw AppError.badRequest('Amount must be greater than zero');
         }
         return this._balance >= amount;
     }
 
     addTransaction(transaction: Transaction): void {
         if (!transaction) {
-            throw new Error('Invalid transaction');
+            throw AppError.badRequest('Invalid transaction');
         }
         this._transactions.push(transaction);
     }

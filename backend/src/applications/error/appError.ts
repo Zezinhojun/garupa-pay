@@ -18,4 +18,8 @@ export class AppError extends Error {
     static notAcceptable(message: string) {
         return new AppError(message, 406)
     }
+
+    static internalServerError(message: string) {
+        return new AppError(message, 500);
+    }
 }

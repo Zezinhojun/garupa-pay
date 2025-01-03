@@ -24,13 +24,13 @@ class App {
                 const server = this.container.get<IHttpServer>(TYPES.HttpServer);
 
                 server.addRoute('PUT', '/accounts/:accountId/status', (req, res, next) => accountController.updatedStatus(req, res, next));
-                server.addRoute('POST', '/accounts', (req, res) => accountController.create(req, res));
+                server.addRoute('POST', '/accounts', (req, res, next) => accountController.create(req, res, next));
                 server.addRoute('GET', '/accounts/:id', (req, res) => accountController.findById(req, res));
                 server.addRoute('GET', '/accounts', (req, res) => accountController.findAll(req, res));
                 server.addRoute('PUT', '/accounts/:id', (req, res) => accountController.update(req, res));
                 server.addRoute('DELETE', '/accounts/:id', (req, res) => accountController.delete(req, res));
 
-                server.addRoute('POST', '/transactions', (req, res) => transactionController.create(req, res));
+                server.addRoute('POST', '/transactions', (req, res, next) => transactionController.create(req, res, next));
                 server.addRoute('GET', '/transactions/:id', (req, res) => transactionController.findById(req, res));
                 server.addRoute('GET', '/transactions', (req, res) => transactionController.findAll(req, res));
                 server.addRoute('PUT', '/transactions/:id', (req, res) => transactionController.update(req, res));

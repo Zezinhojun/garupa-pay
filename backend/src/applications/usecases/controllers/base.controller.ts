@@ -13,14 +13,13 @@ export class BaseController<T extends IPlainConvertible> implements IBaseControl
         protected readonly repository: IBaseRepository<T>
     ) { }
 
-    async create(req: { body: T; }, res: any): Promise<void> {
+    async create(req: { body: T; }, res: any, next: any): Promise<void> {
         try {
             const entity = req.body;
             const createdEntity = await this.repository.create(entity);
             return res.status(201).json(createdEntity);
         } catch (error) {
-            const errorMessage = (error as Error).message;
-            return res.status(500).json({ error: errorMessage });
+            next(error)
         }
     }
 
@@ -82,5 +81,4 @@ export class BaseController<T extends IPlainConvertible> implements IBaseControl
             return res.status(500).json({ error: errorMessage });
         }
     }
-
 }

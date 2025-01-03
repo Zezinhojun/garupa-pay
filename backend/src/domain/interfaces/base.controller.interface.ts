@@ -11,7 +11,7 @@ export interface IResponse {
 }
 
 export interface IBaseController<T> {
-    create(req: { body: T; }, res: any): Promise<void>
+    create(req: { body: T; }, res: any, next: any): Promise<void>
     findById(req: IRequest, res: IResponse): Promise<void>;
     findAll(req: IRequest<object, object, { page?: string; limit?: string }>, res: any): Promise<void>
     update(req: { params: { id: string; }; body: Partial<T>; }, res: any): Promise<void>

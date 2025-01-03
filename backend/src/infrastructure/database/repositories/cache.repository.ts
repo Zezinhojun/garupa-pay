@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
-import { ICacheClient } from "../../../domain/interfaces/cache.client.interface";
 import { ICacheRepository } from "../../../domain/interfaces/cache.repository.interface";
 import { TYPES } from "../../../di/types";
+import { ICacheClient } from "../../../domain/interfaces/cache.client.interface copy";
 
 @injectable()
 export class CacheRepository implements ICacheRepository {

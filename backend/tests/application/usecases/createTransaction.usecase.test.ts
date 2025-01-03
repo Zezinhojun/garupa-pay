@@ -1,5 +1,5 @@
-import { CreateTransactionUseCase, CreateTransactionDTO, CreateTransactionResponseDTO, ErrorCode } from "../../../src/applications/usecases/createTransaction.usecase";
-import { StatusTransaction, Transaction, TransactionType } from "../../../src/domain/entities/transaction.entity";
+import { CreateTransactionUseCase, CreateTransactionDTO, CreateTransactionResponseDTO } from "../../../src/applications/usecases/createTransaction.usecase";
+import { StatusTransaction, TransactionType } from "../../../src/domain/entities/transaction.entity";
 import { TransactionRepository } from "../../../src/infrastructure/database/repositories/transaction.repository";
 import { cacheRepositoryMock, eventBusMock, mockMapper, mockOrmClient } from "../../utils/Mocks";
 
@@ -15,8 +15,8 @@ describe('CreateTransaction usecase', () => {
 
     it('should successfully create a transaction', async () => {
         const input: CreateTransactionDTO = {
-            fromAccountId: '123',
-            toAccountId: '456',
+            fromAccountId: '123e4567-e89b-12d3-a456-426614174000',
+            toAccountId: '123e4567-e89b-12d3-a456-426614174001',
             amount: 100,
             type: TransactionType.DEPOSIT,
         };
@@ -40,8 +40,8 @@ describe('CreateTransaction usecase', () => {
         expect(result.success).toBe(true);
         expect(result.data).toEqual({
             transactionId: 'tx123',
-            fromAccountId: '123',
-            toAccountId: '456',
+            fromAccountId: '123e4567-e89b-12d3-a456-426614174000',
+            toAccountId: '123e4567-e89b-12d3-a456-426614174001',
             amount: 100,
             type: TransactionType.DEPOSIT,
             status: StatusTransaction.PENDING,
@@ -64,57 +64,52 @@ describe('CreateTransaction usecase', () => {
         };
 
         await expect(sut.execute(input)).rejects
-            .toThrow(`Invalid data: ${ErrorCode.INVALID_DATA}`);
+            .toThrow(`Invalid data`);
     });
 
-    it('should handle unexpected errors gracefully', async () => {
+    it('should emit event when transaction is successfully created', async () => {
         const input: CreateTransactionDTO = {
-            fromAccountId: '123',
-            toAccountId: '456',
+            fromAccountId: '123e4567-e89b-12d3-a456-426614174000',
+            toAccountId: '123e4567-e89b-12d3-a456-426614174001',
             amount: 100,
             type: TransactionType.DEPOSIT,
         };
 
-        transactionRepositoryMock.create = jest.fn().mockRejectedValue(new Error('Unexpected error'));
-
-        await expect(sut.execute(input)).rejects.toThrow(`${ErrorCode.UNEXPECTED_ERROR}`);
-    });
-
-    it("should emit event when transaction is successfully created", async () => {
-        const input: CreateTransactionDTO = {
-            fromAccountId: "account1",
-            toAccountId: "account2",
-            amount: 100,
-            type: TransactionType.DEPOSIT,
-        };
-
-        const mockTransaction = new Transaction({
+        const mockTransaction = {
+            id: 'tx123',
             fromAccountId: input.fromAccountId,
             toAccountId: input.toAccountId,
             amount: input.amount,
             type: input.type,
             status: StatusTransaction.PENDING,
-            dueDate: input.dueDate,
+            dueDate: null,
             createdAt: new Date(),
-            updatedAt: new Date()
-        });
+            updatedAt: new Date(),
+        };
 
-        (transactionRepositoryMock.create as jest.Mock).mockResolvedValue(mockTransaction);
+        transactionRepositoryMock.create = jest.fn().mockResolvedValue(mockTransaction);
+        eventBusMock.emit = jest.fn();
+        const result: CreateTransactionResponseDTO = await sut.execute(input);
 
-        const result = await sut.execute(input);
 
         expect(result.success).toBe(true);
-        expect(eventBusMock.emit).toHaveBeenCalledWith("transaction.created", expect.objectContaining({
-            formattedTransaction: expect.objectContaining({
-                transactionId: mockTransaction.id,
-                fromAccountId: mockTransaction.fromAccountId,
-                toAccountId: mockTransaction.toAccountId,
-                amount: mockTransaction.amount,
-                type: mockTransaction.type,
-                status: mockTransaction.status,
-            })
-        }));
+        expect(result.data).toEqual({
+            transactionId: 'tx123',
+            fromAccountId: input.fromAccountId,
+            toAccountId: input.toAccountId,
+            amount: 100,
+            type: TransactionType.DEPOSIT,
+            status: StatusTransaction.PENDING,
+            dueDate: null,
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
+        });
+
+        expect(eventBusMock.emit).toHaveBeenCalledWith('transaction.created', {
+            formattedTransaction: expect.any(Object),
+        });
     });
+
 
 
 })

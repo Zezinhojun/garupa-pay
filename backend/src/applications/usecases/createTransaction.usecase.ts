@@ -3,14 +3,8 @@ import { TYPES } from "../../di/types";
 import { StatusTransaction, Transaction, TransactionType } from "../../domain/entities/transaction.entity";
 import { IEventBus } from "../../domain/interfaces/eventbus.interface";
 import { TransactionRepository } from "../../infrastructure/database/repositories/transaction.repository";
-
-export enum ErrorCode {
-    SUCCESS = 200,
-    INVALID_DATA = 400,
-    ACCOUNT_NOT_FOUND = 404,
-    INSUFFICIENT_BALANCE = 406,
-    UNEXPECTED_ERROR = 500,
-}
+import { AppError } from "../error/appError";
+import { isUUID } from "validator";
 
 export interface CreateTransactionDTO {
     fromAccountId: string;
@@ -47,37 +41,33 @@ export class CreateTransactionUseCase {
     ) { }
 
     async execute(input: CreateTransactionDTO): Promise<CreateTransactionResponseDTO> {
-        let transaction: Transaction | null = null
 
         if (!this.isValidTransactionData(input)) {
-            throw new Error(`Invalid data: ${ErrorCode.INVALID_DATA}`);
+            throw AppError.badRequest(`Invalid data`);
         }
 
-        try {
-            transaction = Transaction.createTransaction(
-                input.fromAccountId,
-                input.toAccountId,
-                input.amount,
-                input.type,
-                input.dueDate
-            );
+        this.validateUUIDs(input);
 
-            if (!this.transactionRepository) {
-                throw new Error(`Unexpected error: ${ErrorCode.UNEXPECTED_ERROR}`);
-            }
+        const transaction = Transaction.createTransaction(
+            input.fromAccountId,
+            input.toAccountId,
+            input.amount,
+            input.type,
+            input.dueDate
+        );
 
-            const savedTransaction = await this.transactionRepository.create(transaction);
-            const formattedTransaction = await this.formatTrasanction(savedTransaction)
-
-            await this.eventBus.emit('transaction.created', {
-                formattedTransaction
-            });
-
-            return { success: true, data: formattedTransaction };
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (error) {
-            throw new Error(`Unexpected error: ${ErrorCode.UNEXPECTED_ERROR}`);
+        if (!this.transactionRepository) {
+            throw AppError.internalServerError('Transaction repository not available');
         }
+
+        const savedTransaction = await this.transactionRepository.create(transaction);
+        const formattedTransaction = await this.formatTrasanction(savedTransaction)
+
+        await this.eventBus.emit('transaction.created', {
+            formattedTransaction
+        });
+
+        return { success: true, data: formattedTransaction };
 
     }
 
@@ -100,5 +90,15 @@ export class CreateTransactionUseCase {
             return false;
         }
         return true;
+    }
+
+    private validateUUIDs(input: CreateTransactionDTO): void {
+        if (!isUUID(input.fromAccountId)) {
+            throw AppError.badRequest("fromAccountId must be a valid UUID");
+        }
+
+        if (!isUUID(input.toAccountId)) {
+            throw AppError.badRequest("toAccountId must be a valid UUID");
+        }
     }
 }

@@ -30,7 +30,7 @@ export class TransactionController extends BaseController<Transaction> {
 
     }
 
-    async create(req: any, res: any) {
+    async create(req: any, res: any, next: any) {
         const { fromAccountId, toAccountId, amount, dueDate } = req.body;
         const createTransactionDTO: CreateTransactionDTO = {
             fromAccountId,
@@ -48,8 +48,7 @@ export class TransactionController extends BaseController<Transaction> {
                 return res.status(400).json({ error: result.errorMessage ?? 'Failed to create transaction' });
             }
         } catch (error) {
-            const errorMessage = (error as Error).message;
-            return res.status(500).json({ error: errorMessage });
+            next(error)
         }
     }
 }
