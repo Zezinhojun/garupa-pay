@@ -29,11 +29,11 @@ export class TransactionEventHandler {
         await this.eventBus.subscribe('transaction.completed', async (message: string) => {
             try {
                 const eventData = JSON.parse(message);
-                console.log("chama o finalizeTransactionUseCase.executeSuccess", eventData)
+                console.log("Transaction completed event received:", eventData);
             } catch (error) {
-                console.error('Error finalizing failed transaction:', error);
+                console.error('Error processing completed transaction event:', error);
             }
-        })
+        });
 
     }
 

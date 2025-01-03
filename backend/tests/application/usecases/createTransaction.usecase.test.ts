@@ -39,7 +39,7 @@ describe('CreateTransaction usecase', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toEqual({
-            transactionId: 'tx123',
+            id: 'tx123',
             fromAccountId: '123e4567-e89b-12d3-a456-426614174000',
             toAccountId: '123e4567-e89b-12d3-a456-426614174001',
             amount: 100,
@@ -94,7 +94,7 @@ describe('CreateTransaction usecase', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toEqual({
-            transactionId: 'tx123',
+            id: 'tx123',
             fromAccountId: input.fromAccountId,
             toAccountId: input.toAccountId,
             amount: 100,
@@ -109,7 +109,4 @@ describe('CreateTransaction usecase', () => {
             formattedTransaction: expect.any(Object),
         });
     });
-
-
-
 })

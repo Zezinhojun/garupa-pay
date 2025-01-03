@@ -1,6 +1,6 @@
 import Redis from "ioredis";
-import { ICacheClient } from "../../../domain/interfaces/cache.client.interface";
 import { injectable } from "inversify";
+import { ICacheClient } from "../../../domain/interfaces/cache.client.interface copy";
 
 @injectable()
 export class RedisCacheClientAdapter implements ICacheClient {

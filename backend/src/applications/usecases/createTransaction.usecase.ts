@@ -73,7 +73,7 @@ export class CreateTransactionUseCase {
 
     private async formatTrasanction(transaction: Transaction) {
         return {
-            transactionId: transaction.id,
+            id: transaction.id,
             fromAccountId: transaction.fromAccountId,
             toAccountId: transaction.toAccountId,
             amount: transaction.amount,

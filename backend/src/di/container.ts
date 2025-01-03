@@ -47,6 +47,8 @@ export async function initializeContainer() {
     initializeUseCases();
     initializeControllers()
 
+    await initializeEventHandlers();
+
     return container;
 }
 
@@ -109,9 +111,6 @@ function initializeUseCases() {
         .to(ProcessTransactionUseCase)
         .inSingletonScope();
 
-    container.bind<TransactionEventHandler>(TYPES.TransactionEventHandler)
-        .to(TransactionEventHandler)
-        .inSingletonScope();
 }
 
 function initializeControllers() {
@@ -121,4 +120,12 @@ function initializeControllers() {
         .inSingletonScope();
 }
 
+async function initializeEventHandlers() {
+    container.bind<TransactionEventHandler>(TYPES.TransactionEventHandler)
+        .to(TransactionEventHandler)
+        .inSingletonScope();
+
+    const transactionEventHandler = container.get<TransactionEventHandler>(TYPES.TransactionEventHandler);
+    await transactionEventHandler.initialize();
+}
 export { container };
