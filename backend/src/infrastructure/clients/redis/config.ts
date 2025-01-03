@@ -10,8 +10,6 @@ export const redisConfig: RedisConfig = {
     port: parseInt(process.env.REDIS_PORT ?? '6379'),
 }
 
-console.log('Redis Config:', redisConfig);
-
 export const redisOptions: RedisOptions = {
     host: redisConfig.host,
     port: redisConfig.port,

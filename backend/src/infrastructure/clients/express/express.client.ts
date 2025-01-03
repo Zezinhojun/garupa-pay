@@ -34,4 +34,8 @@ export class ExpressClientAdapter implements IHttpServer<Request, Response> {
                 throw new Error(`Unsupported HTTP method: ${method}`);
         }
     }
+
+    addMiddleware(middleware: any): void {
+        this.app.use(middleware);
+    }
 }

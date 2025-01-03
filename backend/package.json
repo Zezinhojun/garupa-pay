@@ -22,6 +22,7 @@
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/pg": "^8.11.10",
+    "@types/validator": "^13.12.2",
     "eslint": "^9.17.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.14.0",
@@ -40,6 +41,7 @@
     "ioredis": "^5.4.2",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "validator": "^13.12.0"
   }
 }

@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { Account } from "../../domain/entities/account.entity";
 import { AccountRepository } from "../../infrastructure/database/repositories/account.repository";
 import { TYPES } from "../../di/types";
+import { AppError } from "../error/appError";
 
 export interface UpdateAccountStatusDTO {
     accountId: string;
@@ -20,12 +21,11 @@ export class UpdateAccountStatusUseCase {
 
     async execute(input: UpdateAccountStatusDTO): Promise<Account> {
         const { accountId } = input;
-
         const account = await this.accountRepository.findById(accountId)
 
-
         if (!account) {
-            throw new Error('Account not found');
+            throw AppError.notFound("Account not found")
+
         }
 
         if (account.isActive) {

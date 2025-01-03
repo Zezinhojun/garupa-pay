@@ -4,6 +4,7 @@ import { TYPES } from "./di/types";
 import { IHttpServer } from "./domain/interfaces/http.server.interface";
 import { AccountController } from "./applications/usecases/controllers/account.controller";
 import { TransactionController } from "./applications/usecases/controllers/transaction.controller";
+import { errorHandler } from "./infrastructure/clients/express/error.handler";
 
 class App {
     private readonly port: number
@@ -21,7 +22,8 @@ class App {
             const transactionController = container.get<TransactionController>(TYPES.TransactionController);
             if (this.container) {
                 const server = this.container.get<IHttpServer>(TYPES.HttpServer);
-                server.addRoute('PUT', '/accounts/:accountId/status', (req, res) => accountController.updatedStatus(req, res));
+
+                server.addRoute('PUT', '/accounts/:accountId/status', (req, res, next) => accountController.updatedStatus(req, res, next));
                 server.addRoute('POST', '/accounts', (req, res) => accountController.create(req, res));
                 server.addRoute('GET', '/accounts/:id', (req, res) => accountController.findById(req, res));
                 server.addRoute('GET', '/accounts', (req, res) => accountController.findAll(req, res));
@@ -33,6 +35,9 @@ class App {
                 server.addRoute('GET', '/transactions', (req, res) => transactionController.findAll(req, res));
                 server.addRoute('PUT', '/transactions/:id', (req, res) => transactionController.update(req, res));
                 server.addRoute('DELETE', '/transactions/:id', (req, res) => transactionController.delete(req, res));
+
+                server.addMiddleware(errorHandler);
+
                 server.start(this.port);
             }
         } catch (error) {
