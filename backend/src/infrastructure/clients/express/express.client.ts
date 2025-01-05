@@ -1,6 +1,7 @@
 import express, { Application, json, Request, RequestHandler, Response } from "express";
 import { IHttpServer } from "../../../domain/interfaces/http.server.interface";
 import { injectable } from "inversify";
+import cors from 'cors'
 
 @injectable()
 export class ExpressClientAdapter implements IHttpServer<Request, Response> {
@@ -9,6 +10,7 @@ export class ExpressClientAdapter implements IHttpServer<Request, Response> {
     constructor() {
         this.app = express();
         this.app.use(json());
+        this.app.use(cors({ origin: 'http://localhost:3000' }));
     }
 
     start(port: number): void {

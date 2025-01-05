@@ -142,7 +142,8 @@ export class Account implements IAccount {
             balance: this._balance,
             isActive: this._isActive,
             createdAt: this._createdAt,
-            updatedAt: this._updatedAt
+            updatedAt: this._updatedAt,
+            transactions: this._transactions.map(transaction => transaction.toPlain()),
         }
     }
 }
