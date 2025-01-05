@@ -1,5 +1,5 @@
 import { AppError } from "../../applications/error/appError";
-import { Transaction } from "./transaction.entity";
+import { Transaction, TransactionType } from "./transaction.entity";
 
 export interface IAccount {
     id?: string;
@@ -127,11 +127,15 @@ export class Account implements IAccount {
         return this._balance >= amount;
     }
 
-    addTransaction(transaction: Transaction): void {
-        if (!transaction) {
-            throw AppError.badRequest('Invalid transaction');
-        }
-        this._transactions.push(transaction);
+    addTransaction(transaction: Transaction) {
+        const transactionCopy = new Transaction({
+            ...transaction.toPlain(),
+            type: this.id === transaction.fromAccountId ?
+                TransactionType.WITHDRAW :
+                TransactionType.DEPOSIT
+        });
+
+        this._transactions.push(transactionCopy);
     }
 
     toPlain() {

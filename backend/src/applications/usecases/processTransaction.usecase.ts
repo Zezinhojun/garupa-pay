@@ -55,27 +55,54 @@ export class ProcessTransactionUseCase {
             throw AppError.notFound(`toAccount not found`);
         }
 
-        fromAccount.validateAccountStatus();
-        toAccount.validateAccountStatus();
+        try {
+            fromAccount.validateAccountStatus();
+            toAccount.validateAccountStatus();
+        } catch {
+            transaction.setStatus(StatusTransaction.FAILED);
+            fromAccount.addTransaction(transaction);
+            toAccount.addTransaction(transaction);
+
+            await Promise.all([
+                this.transactionRepository.update(transaction.id, transaction),
+                this.accountRepository.update(fromAccount.id, fromAccount),
+                this.accountRepository.update(toAccount.id, toAccount),
+            ]);
+
+            throw AppError.badRequest(`Invalid account(s)`);
+        }
 
         if (transaction.isExpired()) {
             transaction.setStatus(StatusTransaction.FAILED);
             fromAccount.addTransaction(transaction);
             toAccount.addTransaction(transaction);
+
             await Promise.all([
                 this.accountRepository.update(fromAccount.id, fromAccount),
                 this.accountRepository.update(toAccount.id, toAccount),
+                this.transactionRepository.update(transaction.id, transaction),
             ]);
+
             throw AppError.badRequest('Transaction expired');
         }
 
-        fromAccount.canWithDraw(formattedTransaction.amount);
+        if (!fromAccount.canWithDraw(formattedTransaction.amount)) {
+            transaction.setStatus(StatusTransaction.FAILED);
+            fromAccount.addTransaction(transaction);
+            await Promise.all([
+                this.transactionRepository.update(transaction.id, transaction),
+                this.accountRepository.update(fromAccount.id, fromAccount),
+            ]);
+            throw AppError.badRequest(`Insufficient funds in fromAccount`);
+        }
+
         fromAccount.withdraw(transaction.amount);
         toAccount.deposit(transaction.amount);
         transaction.setStatus(StatusTransaction.COMPLETED);
         await this.transactionRepository.update(transaction.id, transaction);
         fromAccount.addTransaction(transaction);
         transaction.setType(TransactionType.DEPOSIT);
+        toAccount.addTransaction(transaction)
 
         await Promise.all([
             this.accountRepository.update(fromAccount.id, fromAccount),

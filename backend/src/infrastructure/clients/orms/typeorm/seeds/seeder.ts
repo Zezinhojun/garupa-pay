@@ -31,6 +31,12 @@ export class Seeder {
                     balance: 2000.00,
                     isActive: true
                 },
+                {
+                    name: 'Michael Jackson',
+                    userCpf: '12345678931',
+                    balance: 2000.00,
+                    isActive: false
+                },
             ]);
             console.log('Accounts seeded successfully.');
             return await accountRepository.find();

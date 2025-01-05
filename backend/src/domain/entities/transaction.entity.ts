@@ -82,7 +82,16 @@ export class Transaction implements ITransaction {
 
     isExpired(): boolean {
         if (this._dueDate) {
-            return this._dueDate < new Date();
+            const dueDate = new Date(this._dueDate);
+            if (isNaN(dueDate.getTime())) {
+                throw new Error('Invalid dueDate format');
+            }
+
+            const currentDate = new Date();
+            dueDate.setHours(0, 0, 0, 0);
+            currentDate.setHours(0, 0, 0, 0);
+
+            return dueDate < currentDate;
         }
         return false;
     }

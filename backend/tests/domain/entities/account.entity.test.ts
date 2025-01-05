@@ -149,28 +149,38 @@ describe('Account entity', () => {
         let transaction: Transaction;
 
         beforeEach(() => {
+            account = new Account({
+                id: '12345678901',
+                userCpf: '12345678901',
+                name: 'John Doe',
+                balance: 1000
+            });
+
             transaction = new Transaction({
                 fromAccountId: '12345678901',
                 toAccountId: '98765432101',
                 amount: 500,
                 type: TransactionType.WITHDRAW,
                 status: StatusTransaction.COMPLETED,
-
             });
         });
 
         it('should add valid transaction', () => {
             account.addTransaction(transaction);
             expect(account.transactions).toHaveLength(1);
-            expect(account.transactions[0]).toBe(transaction);
-        });
 
-        it('should throw error for null transaction', () => {
-            expect(() => account.addTransaction(null!)).toThrow('Invalid transaction');
-        });
-
-        it('should throw error for undefined transaction', () => {
-            expect(() => account.addTransaction(undefined!)).toThrow('Invalid transaction');
+            const addedTransaction = account.transactions[0];
+            expect(addedTransaction.toPlain()).toEqual({
+                id: undefined,
+                fromAccountId: '12345678901',
+                toAccountId: '98765432101',
+                amount: 500,
+                type: TransactionType.WITHDRAW,
+                status: StatusTransaction.COMPLETED,
+                createdAt: undefined,
+                updatedAt: undefined,
+                dueDate: undefined
+            });
         });
 
         it('should return copy of transactions array', () => {
@@ -201,6 +211,7 @@ describe('Account entity', () => {
                 balance: 1000,
                 isActive: false
             });
+            
             expect(account.isActive).toBe(false);
         });
     });
@@ -215,6 +226,7 @@ describe('Account entity', () => {
                 name: 'John Doe',
                 balance: 1000,
                 isActive: true,
+                transactions: [],
                 createdAt: account.createdAt,
                 updatedAt: account.updatedAt
             });

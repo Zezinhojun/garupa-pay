@@ -113,7 +113,7 @@ describe('ProcessTransaction usecase', () => {
         accountRepositoryMock.findMany = jest.fn().mockResolvedValue([fromAccount, toAccount]);
 
         await expect(sut.execute(input)).rejects
-            .toThrow(`Insufficient balance`);
+            .toThrow(`Insufficient funds in fromAccount`);
     });
 
     it('should throw when toAccount is not found but fromAccount is found and save the transaction as FAILED', async () => {
