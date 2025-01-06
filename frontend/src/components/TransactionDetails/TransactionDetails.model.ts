@@ -1,13 +1,6 @@
-export interface Transaction {
-    id: string;
-    amount: number;
-    createdAt: string;
-    updatedAt: string;
-    dueDate: string;
-    fromAccountId: string;
-    fromAccountName: string;
+export interface NewTransactionProps {
+    show: boolean;
+    onHide: () => void;
+    loggedInAccountId: string;
     toAccountId: string;
-    toAccountName: string;
-    status: string;
-    type: string;
 }
