@@ -1,24 +1,13 @@
 import React from 'react';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
+import HomeView from './pages/Home/Home.view.tsx';
 
 function App() {
   return (
     <>
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-       <ToastContainer />
+      <HomeView/>
+      <ToastContainer />
     </>
   );
 }
