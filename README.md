@@ -43,12 +43,12 @@ Para começar com este projeto, certifique-se de ter o [Node.js](https://nodejs.
 3. Execute o Docker Compose:
 
 ```bash
-  docker compose up
+  docker-compose up -d
 ```
 4. Entre e instale as dependencias do backend para executar a migration e seed:
 
 ```bash
-  cd backend && npm install
+  npm install
 ```
 
 5. Rode a migration e o seed:
