@@ -1,6 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit/react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { enrichTransaction, IEnrichedTransaction, ITransaction } from "./store/slices/transaction.slice.ts";
+import { RootState } from "./store/store.ts";
+import { IAccount } from "./store/slices/account.slice.ts";
 
 interface CreateTransaction {
     fromAccountId: string;
@@ -44,3 +47,46 @@ export const createTransaction = createAsyncThunk(
         }
     }
 );
+
+export const fetchTransactionById = createAsyncThunk<
+    IEnrichedTransaction,
+    string,
+    { state: RootState }
+>(
+    'transaction/fetchById',
+    async (transactionId: string, { getState, rejectWithValue }) => {
+        try {
+            const response = await api.get(`/transactions/${transactionId}`);
+            if (response.status !== 200) {
+                throw new Error('Failed to fetch transaction');
+            }
+            const transaction: ITransaction = response.data;
+            const accounts = getState().account.accounts;
+            const enrichedTransaction = enrichTransaction(transaction, accounts);
+
+            return enrichedTransaction;
+        } catch {
+            return rejectWithValue("Não foi possível carregar a transaction");
+        }
+    }
+);
+
+export const fetchAccounts = createAsyncThunk<IAccount[], void, { rejectValue: string }>(
+    'account/fetchAccounts',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get('/accounts');
+
+            if (!response.data || response.data.length === 0) {
+                const errorMessage = 'Não há contas disponíveis';
+                toast.error(errorMessage);
+                return rejectWithValue(errorMessage);
+            }
+
+            return response.data;
+        } catch {
+            return rejectWithValue('Não foi possível carregar os accounts');
+        }
+    }
+);
+
